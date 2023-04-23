@@ -28,6 +28,6 @@ Värjäys on valmis. Kohteen Properties-valikon kohdissa Color Scale ja SF displ
 
 ![Kuva7](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Syvyyskartta/Kuva7.png)
 
-Värjäysasetuksien suhteen ei ole yhtä oikeaa toimintatapaa, ja paljon riippuu siitä, mitä halutaan korostaa. Esimerkiksi esimerkin piirtokirjoituksen kohdalla alempaa pienemmällä kaiverrettua tekstiä korostettaessa ylemmän rivin kirjoitus hälvenee näkyvistä. Yksi vaihtoehto on leikata kumpikin taso omaksi oliokseen ja tehdä käsittely kummallekin erikseen. Myös EDL shaderin laittaminen päälle voi auttaa tämän kaltaisissa kohteissa (Display → Shaders & Filters → EDL shader). 
+Värjäysasetuksien suhteen ei ole yhtä oikeaa toimintatapaa, ja paljon riippuu siitä, mitä halutaan korostaa. Esimerkiksi esimerkin piirtokirjoituksen kohdalla alempaa pienemmällä kaiverrettua tekstiä korostettaessa ylemmän rivin kirjoitus hälvenee näkyvistä. Yksi vaihtoehto on leikata kumpikin taso omaksi oliokseen ja tehdä käsittely kummallekin erikseen. Myös EDL shaderin (Eye-Dome Lighting) laittaminen päälle voi auttaa tämän kaltaisissa kohteissa (Display → Shaders & Filters → EDL shader). 
 
 ![Kuva8](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Syvyyskartta/Kuva8.png)

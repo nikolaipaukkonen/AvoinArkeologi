@@ -14,33 +14,33 @@ WMTS-rajapinnan käyttö vaatii oman API-avaimen (application programming interf
     - poistaa olemassa olevan API-avaimen.
     - muokata tietojasi tai poistaa käyttäjätunnuksesi.
 
-(Kuva 1: API-avaimen luominen.)[LINKKI]
+(Kuva 1: API-avaimen luominen.)[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva1.png?raw=true]
 
 ## 2. Rajapintaan yhdistäminen
 
 Avaa QGIS ja luo uusi projekti. Mene Layer -> Add Layer -> Add WMS/WMTS Layer (Ctrl+Shift+W). Valitse ylärivistä nappi New. Anna yhteydelle sopiva nimi (esim. "Maanmittauslaitos WMTS") ja kopioi kohtaan URL yllä oleva URL, joka päättyy ".xml". Muuten asetuksiin ei tarvitse koskea. Klikkaa OK.
 
-(Kuva 2: Uuden yhteyden luominen)[LINKKI]
+(Kuva 2: Uuden yhteyden luominen)[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva2.png?raw=true]
 
 Nyt Data Source Managerissa pitäisi Maanmittauslaitos WMTS:n kohdalla olla aktiivisena Connect-painike.
 
-(Kuva 3: Data Source Manager)[LINKKI]
+(Kuva 3: Data Source Manager)[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva3.png?raw=true]
 
 Paina Connect. Nyt pitäisi aueta Enter Credentials -ruutu. Vaiheessa 1. luotu API-avain syötetään tänne. Kopioi ja liitä se kohtaan Username -- kohta Password jää tyhjäksi.
 
-(Kuva 4: API-avaimen syöttäminen[LINKKI]
+(Kuva 4: API-avaimen syöttäminen[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva4.png?raw=true]
 
 Nyt pitäisi aueta Tilesets-näkymä. Valitse haluamasi klikkaamalla (esim. Maastokartta) ja paina alaoikealta Add.
 
-(Kuva 5: Tilesets)[LINKKI]
+(Kuva 5: Tilesets)[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva5.png?raw=true]
 
 Paina Close. Nyt kartta-aineiston pitäisi olla näkyvissä. Lähentäessä ja loitontaessa kartta päivittyy automaattisesti sopivaan tarkkuuteen, mutta yhteyden laadusta riippuen tässä saattaa kestää hetki. 
 
-(Kuva 6: Kartta esillä)[LINKKI]
+(Kuva 6: Kartta esillä)[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva6.png?raw=true]
 
 WMS/WMTS-yhteyksien luominen onnistuu myös klikkaamalla WMS/WMTS-kohtaa Browser-työkaluikkunassa, jonka saa näkyviin valitsemalla View -> Panels -> Browser.
 
-(Kuva 7: Browser-työkaluikkuna)[LINKKI]
+(Kuva 7: Browser-työkaluikkuna)[https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/Kuva7.png?raw=true]
 
 ## 3. Muita hyödyllisiä rajapintalinkkejä
 

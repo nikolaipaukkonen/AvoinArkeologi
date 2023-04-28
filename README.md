@@ -17,3 +17,4 @@
 
 ### QGIS
 
+- [WMS/WMTS-aineistojen tuonti](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)

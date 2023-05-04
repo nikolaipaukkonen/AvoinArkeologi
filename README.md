@@ -28,6 +28,8 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Meshroom
 
+- Peruskäyttö
+
 ### Python
 
 ### RGPR

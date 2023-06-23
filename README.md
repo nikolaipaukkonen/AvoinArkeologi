@@ -18,13 +18,17 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Blender
 
+- Realististen materiaalien muokkaus
+
 ### CloudCompare
 
 - [Syvyyskartan tekeminen](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
 
-- 
+- Pistepilvien vertailu
 
 ### Meshlab
+
+- Meshin yksinkertaistus
 
 ### Meshroom
 
@@ -37,3 +41,5 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 ### QGIS
 
 - [WMS/WMTS-aineistojen tuonti](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
+
+- Kaltevuuskartat ja analysointi

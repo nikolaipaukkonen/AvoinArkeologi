@@ -43,3 +43,5 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 - [WMS/WMTS-aineistojen tuonti](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
 
 - Kaltevuuskartat ja analysointi
+
+- MML pistepilviaineistot ja QGIS

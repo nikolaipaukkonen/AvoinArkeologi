@@ -26,6 +26,8 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 - Pistepilvien vertailu
 
+- Pistepilvien yhdistäminen ja asemointi
+
 ### Meshlab
 
 - Meshin yksinkertaistus

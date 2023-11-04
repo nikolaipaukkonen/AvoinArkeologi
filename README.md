@@ -41,6 +41,9 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 ### RGPR
 
 ### QGIS
+- Perusteet
+  
+- Tiedostorakenne
 
 - [WMS/WMTS-aineistojen tuonti](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
 

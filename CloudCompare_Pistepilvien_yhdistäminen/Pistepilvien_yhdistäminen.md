@@ -2,7 +2,7 @@
 
 Eräs tyypillinen 3D-aineistojen käsittelyyn liittyvä ongelma on eri aineistojen yhdistäminen ja asemointi keskenään. Moderneissa laserkeilaimissa on usein sisäänrakennettuna toiminnallisuutta, jolla eri asemista otetut keilaukset yhdistyvät automaattisesti toisiinsa, mutta välillä yhdistäminen saattaa epäonnistua. Toisinaan saattaa ilmetä myös tarve asemoida kaksi eri lähteestä olevaa aineistoa keskenään -- esimerkiksi itse olen usein skannannut ensin georeferoidun pohjakeilauksen maalaserkeilaimella, minkä jälkeen jatkuva kaivausdokumentointi on voitu hoitaa kevyemmin fotogrammetrisesti: jokainen uusi malli on sitten voitu asemoida suhteessa isoon pohjakeilaukseen. 
 
-Tämä ohje käsittelee pistepilvien keskinäistä asemointia ja referensointia. Aineiston georeferointi on erillinen kysymys, jota varten kirjoitan erillisen ohjeen.
+Tämä ohje käsittelee pistepilvien keskinäistä asemointia ja referentointia. Aineiston georeferointi on erillinen kysymys, jota varten kirjoitan erillisen ohjeen.
 
 Asemointiin on monia menetelmiä ja ohjelmia. Tässä esittelen CloudComparessa olevaa Cloud Registration -työkalua. Peruslähtökohtana on raahata pistepilvet suurin piirtein päällekkäin, minkä jälkeen työkalu laskee pilvet yhteen [Iterative closest point](https://en.wikipedia.org/wiki/Iterative_closest_point) (ICP) -algoritmilla. Monia muitakin menetelmiä on -- esimerkiksi CloudComparessa oleva yhteisten yksittäisten pisteiden poimintaan perustuva työkalu -- mutta omassa käytössäni tämä työkalu on yleensä riittänyt.
 

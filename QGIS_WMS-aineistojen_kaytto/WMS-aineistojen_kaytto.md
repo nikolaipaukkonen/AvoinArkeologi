@@ -44,7 +44,7 @@ WMS/WMTS-yhteyksien luominen onnistuu myös klikkaamalla WMS/WMTS-kohtaa Browser
 
 ## 3. Muita hyödyllisiä rajapintalinkkejä
 
-Muista noudattaa rajapintojen ylläpitäjien käyttösopimuksia ja ohjeita. Vaikka palvelu olisi avoin ja ilmainen, voi sen lisenssiin liittyä ehtoja, joita kuuluu noudattaa. Esimerkiksi OpenStreetMap vaatii, että sen käytöstä pitää mainita julkaisemisen yhteydessä.
+Muista noudattaa rajapintojen ylläpitäjien käyttösopimuksia ja ohjeita. Vaikka palvelu olisi avoin ja ilmainen, voi sen lisenssiin liittyä ehtoja, joita kuuluu noudattaa. Esimerkiksi OpenStreetMap vaatii, että sen käytöstä pitää mainita julkaisemisen yhteydessä. Kyse ei ole vain periaatteesta ja laista -- ohjeiden noudattamatta jättäminen johtaa helposti palvelun katkaisemiseen.
 - [Museoviraston rajapinta](https://www.museovirasto.fi/fi/palvelut-ja-ohjeet/tietojarjestelmat/kulttuuriympariston-tietojarjestelmat/kulttuuriympaeristoen-paikkatietoaineistot) on Suomessa toimivan arkeologin perustyökalu
 - [Suomen ympäristökeskus](https://www.syke.fi/fi-FI/Avoin_tieto/Avoimet_rajapinnat) tarjoaa avoimen rajapinnan ympäristötietojärjestelmien julkisiin aineistoihin
 - [Metsäkeskus](https://www.metsakeskus.fi/fi/avoin-metsa-ja-luontotieto/aineistot-paikkatieto-ohjelmille/rajapinnat) tarjoaa metsiin liittyviä aineistoja 

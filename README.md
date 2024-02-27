@@ -22,7 +22,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### CloudCompare
 
-- [Syvyyskartan tekeminen](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
+- [Syvyyskartan tekeminen ja värjäys](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
 
 - Pistepilvien vertailu
 

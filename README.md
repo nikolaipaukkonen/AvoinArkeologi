@@ -18,7 +18,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Blender
 
-- [Realistisen metallipinnan simulointi](./Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.md)
+- [Realistisen metallipinnan simulointi](./Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.html)
 
 ### CloudCompare
 

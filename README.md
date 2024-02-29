@@ -26,7 +26,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 - Pistepilvien vertailu
 
-- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistäminen/Pistepilvien_yhdistaminen.md)
+- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistäminen/Pistepilvien_yhdistaminen.html)
 
 ### Meshlab
 

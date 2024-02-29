@@ -1,0 +1,23 @@
+# Realistisen metallipinnan muokkaus Blenderissä
+Tässä pikaisessa tutoriaalissa kurkistetaan Blenderin Shading-valikon toimintaan tekemällä yksinkertainen muokkaus, jolla saadaan mallin metallipinta käyttäytymään oikealla tavalla. 
+3D-fotogrammetria on erinomainen menetelmä myös erilaisten esineiden dokumentointiin. Sitä käytetäänkin paljon erilaisten museokokoelmien digitoinnin osana, ja esimerkiksi Museovirasto on julkaissut monia hienoja malleja (Sketchfabissa)[ https://sketchfab.com/Museovirasto]. Mallit ovat hienoja ja näyttävät geometrisesti oikeellisilta (vaikka niiden tarkkuutta onkin jouduttu pienentämään Sketchfabia varten). Pintamateriaalit ovat kuitenkin ongelmallisia – valokuvat eivät sellaisinaan tallenna oikein sitä, miten pintamateriaali käyttäytyy esimerkiksi heijastusten osalta. Tämä on erityisen silmiinpistävää metalliesineiden kohdalla, kuten näemme esimerkissämme pian.
+(toinen ongelma on värien oikeellinen tallentuminen, mikä on ratkaistavissa ristipolarisaatiolla ja muutamalla kikalla fotogrammetriamallia laskettaessa, mutta sitä emme käsittele tässä tutoriaalissa)
+
+## Esimerkkiaineisto
+Museoviraston jakamat mallit on lisensoitu yleensä (CC Attribution -lisenssillä)[ https://creativecommons.org/licenses/by/4.0/], joka sallii aineiston uudelleenjakamisen ja muokkaamisen, kunhan alkuperäinen tekijä mainitaan. Niinpä malleja on näppärä käyttää esimerkiksi muokkaamisen harjoitteluun.
+![Kuva 1: Sketchfab-näkymä hopeadenaarista](kuvaurl)
+Kuvassa näkyvä (hopearaha)[ https://sketchfab.com/3d-models/hopeakolikko-silver-coin-rkhy01rr94-d93269013cab473e9b1fab434e0710ce] on 100-luvulta eaa. oleva roomalainen hopeadenaari, joka on paitsi säilynyt hienosti, myös dokumentoitu fotogrammetrialla tarkasti. 
+Ongelma on, että tällaisenaan malli ei lainkaan toisinna hyvälaatuisen hopeaseoksen kiiltoa. Yksittäinen (valokuva)[ https://www.finna.fi/Record/museovirasto.619c5cc5-325a-4d8d-8ea9-732cce7eb5c4?sid=4080142895] Finnasta antaa osviittaa siltä, miten pinnan kuuluisi heijastaa valoa. Ylipäänsä säätäess
+![Kuva 2: Finnan kuva denaarista. CC Attribution -lisenssi](kuvaurl) 
+Ladataan denaari Sketchfabista glb-formaatissa (Download 3D Model -> glb original format). Tiedosto latautuu zip-muodossa. Käytettävä tiedosto on source-alikansiossa.
+##  Työstäminen Blenderissä
+Aloitetaan uusi projekti Blenderissä ja tuodaan ladattu glb-malli sinne (File -> Import -> glTF 2.0 (.glb/.gltf)). Poistetaan kaikki ylimääräiset valot ja kamerat, joita projektissa saattaa tässä vaiheessa olla (Scene collection -listasta). 
+![Kuva 3: Hopeadenaari ilman tekstuureita ja valaistusta.](kuvaurl)
+Vaihdetaan Shading-näkymä aktiiviseksi yläpalkista. Mikäli raha katoaa näkyvistä, saa sen esiin uudestaan esimerkiksi painamalla Home-näppäintä tai valikosta View -> Frame All. 
+![Kuva 4: Näkymä Shading-valikossa. Alakerran noodit saa näkyviin valitsemalla rahan aktiiviseksi listalta](url)
+Näkymän pitäisi olla nyt suurin piirtein tällainen. Raha on yhtä tasaisen harmaa lätty. 
+Alapaneelissa olevat noodit ovat tapa, jolla Blenderissä säädetään objektien väriä, tekstuureja, efektejä ja monia muita ulkoasuun vaikuttavia tekijöitä. Noodeja voi luoda lisää ja linkittää, niin että alkuperäinen perusväri tai tekstuuri muokkautuu haluttuun tilaan. 
+Nyt ei kuitenkaan tarvitse tehdä mitään monimutkaista. Muutamme vain paria arvoa Principled BSDF -noodissa. Noodin periaatteena on simuloida sellaisia ilmiöitä pintamateriaalissa (esimerkiksi nanometrien kokoluokkaa olevat epätasaisuudet), jotka vaikuttavat ratkaisevasti valon käyttäytymiseen, mutta joita on vaikea simuloida geometrisesti tai kaapata esimerkiksi fotogrammetrialla tai laserkeilauksella. Lisätietoa eri valikoista löytyy Blenderin (dokumentaatiosta)[ https://docs.blender.org/manual/en/latest/render/shader_nodes/shader/principled.html].
+Alkuasennossa Metallic -arvo on nollassa ja Roughness täysillä. Säädetään Metallic arvoon 1.0. Sen jälkeen aletaan hilata Roughness-arvoa kohti nollaa. Tässä vaiheessa kannattaa katsoa Finnasta hakemaamme referenssikuvaa ja verrata lopputulosta siihen. Heijastusta arvioidessa kannattaa pyöritellä mallia ja katsoa sitä eri kulmista ja eri valaistuksilla (pikavaihtoehtoja saa oikealla ylhäällä olevasta nuolesta
+![Kuva 5: Metallic-arvo on säädetty täysille ja Roughnessia hilattu alaspäin. Oikealla ylhäällä valikko, josta voi nopeasti testata erilaisia valmiita valaistusasetuksia.](kuvaurl)
+Kun lopputulos on riittävän hyvä, voidaan se tallentaa ja jakaa eteenpäin esimerkiksi (Sketchfabiin)[ https://skfb.ly/oRBto]. 

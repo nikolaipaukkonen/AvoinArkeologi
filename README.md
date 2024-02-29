@@ -22,11 +22,11 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### CloudCompare
 
-- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
+- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.html)
 
 - Pistepilvien vertailu
 
-- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistaminen/Pistepilvien_yhdistaminen.html)
+- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistaminen/Pistepilvien_yhdistaminen.md)
 
 ### Meshlab
 

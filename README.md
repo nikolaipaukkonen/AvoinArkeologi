@@ -18,15 +18,15 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Blender
 
-- [Realistisen metallipinnan simulointi](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.md)
+- [Realistisen metallipinnan simulointi](./Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.md)
 
 ### CloudCompare
 
-- [Syvyyskartan tekeminen ja värjäys](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
+- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
 
 - Pistepilvien vertailu
 
-- [Pistepilvien yhdistäminen ja asemointi](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/CloudCompare_Pistepilvien_yhdist%C3%A4minen/Pistepilvien_yhdist%C3%A4minen.md)
+- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdist%C3%A4minen/Pistepilvien_yhdist%C3%A4minen.md)
 
 ### Meshlab
 
@@ -45,7 +45,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
   
 - Tiedostorakenne
 
-- [WMS/WMTS-aineistojen tuonti](https://github.com/nikolaipaukkonen/AvoinArkeologi/blob/main/QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
+- [WMS/WMTS-aineistojen tuonti](./QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
 
 - Kaltevuuskartat ja analysointi
 

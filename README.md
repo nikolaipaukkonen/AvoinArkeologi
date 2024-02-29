@@ -22,11 +22,11 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### CloudCompare
 
-- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
+- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.html)
 
 - Pistepilvien vertailu
 
-- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdist%C3%A4minen/Pistepilvien_yhdist%C3%A4minen.md)
+- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistaminen/Pistepilvien_yhdistaminen.html)
 
 ### Meshlab
 
@@ -45,7 +45,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
   
 - Tiedostorakenne
 
-- [WMS/WMTS-aineistojen tuonti](./QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
+- [WMS/WMTS-aineistojen tuonti](./QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.html)
 
 - Kaltevuuskartat ja analysointi
 

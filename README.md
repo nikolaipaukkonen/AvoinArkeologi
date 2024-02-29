@@ -18,15 +18,15 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Blender
 
-- [Realistisen metallipinnan simulointi](./Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.html)
+- [Realistisen metallipinnan simulointi](./Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.md)
 
 ### CloudCompare
 
-- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.html)
+- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
 
 - Pistepilvien vertailu
 
-- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistäminen/Pistepilvien_yhdistaminen.html)
+- [Pistepilvien yhdistäminen ja asemointi](./CloudCompare_Pistepilvien_yhdistäminen/Pistepilvien_yhdistäminen.md)
 
 ### Meshlab
 

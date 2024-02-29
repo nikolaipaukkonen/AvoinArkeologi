@@ -22,7 +22,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### CloudCompare
 
-- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.html)
+- [Syvyyskartan tekeminen ja värjäys](./CloudCompare_Syvyyskartta/CloudCompare_syvyyskartta.md)
 
 - Pistepilvien vertailu
 
@@ -45,7 +45,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
   
 - Tiedostorakenne
 
-- [WMS/WMTS-aineistojen tuonti](./QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.html)
+- [WMS/WMTS-aineistojen tuonti](./QGIS_WMS-aineistojen_kaytto/WMS-aineistojen_kaytto.md)
 
 - Kaltevuuskartat ja analysointi
 

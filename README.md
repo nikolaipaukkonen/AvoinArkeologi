@@ -4,7 +4,7 @@
 
 Tällä sivulla on ohjeita ja oppaita, jotka on tarkoitettu arkeologeille, arkeologian opiskelijoille ja arkeologian harrastajille. Ohjeet käsittelevät erilaisia toimintoja, jotka liittyvät esimerkiksi kartta-aineistojen, erilaisten mittausten, tietokantojen ja 3D-mallien käsittelyyn. Ohjelmat, joille ohjeet on tehty, ovat avoimen lähdekoodin ilmaisia ohjelmia. Arkeologisten hankkeiden budjetit ovat usein rajoittuneita tai olemattomia, kun taas esimerkiksi kartoitusalan tai 3D-aineistojen käsittelyyn tarkoitettujen ohjelmistojen lisenssit voivat maksaa satoja tai tuhansia euroja vuodessa. Avoimuus on myöskin tärkeä tieteen etiikan ominaisuus -- tutkijan pitäisi tietää, mitä ohjelma tarkalleen ottaen tekee sisään syötetylle datalle, sen sijaan, että ohjelmaan suhtauduttaisiin kuin mustaan laatikkoon. 
 
-[Mitä tarkoittaa lähdekoodi?](./mita_on_avoin.md)
+[Mitä tarkoittaa avoin lähdekoodi?](./mita_on_avoin.md)
 
 ## Ehdotuksia?
 

@@ -36,6 +36,10 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### RGPR
 
+### DepthmapX
+
+- Helppo spatiaalinen analyysi
+
 ### QGIS
 - Perusteet
   

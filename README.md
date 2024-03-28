@@ -26,7 +26,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Meshlab
 
-- Meshin yksinkertaistus
+- [Meshin yksinkertaistus](./Meshin_yksinkertaistus/Meshin_yksinkertaistus.md)
 
 ### Meshroom
 

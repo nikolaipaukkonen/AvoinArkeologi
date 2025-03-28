@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harris Matrix Automat</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #file-upload {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        #csv-input {
+            display: none;
+        }
+        .upload-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+        #generate-btn {
+            display: none;
+            margin: 0 auto;
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #generate-btn:hover {
+            background-color: #007b9d;
+        }
+        #matrix-container {
+            width: 100%;
+            height: 600px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+        .node {
+            cursor: move;
+        }
+        .node text {
+            font-size: 12px;
+            user-select: none;
+        }
+        .link {
+            fill: none;
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Harris Matrix Automat</h1>
+        <div id="file-upload">
+            <label for="csv-input" class="upload-btn">
+                Upload CSV
+            </label>
+            <input type="file" id="csv-input" accept=".csv">
+        </div>
+        <button id="generate-btn">Generate Harris Matrix</button>
+        <div id="matrix-container"></div>
+    </div>
+
+    <script>
+        const csvInput = document.getElementById('csv-input');
+        const generateBtn = document.getElementById('generate-btn');
+        const matrixContainer = document.getElementById('matrix-container');
+
+        let parsedData = [];
+
+        csvInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const text = e.target.result;
+                parsedData = parseCSV(text);
+                generateBtn.style.display = 'block';
+            };
+
+            reader.readAsText(file);
+        });
+
+        function parseCSV(csvText) {
+            const lines = csvText.split('\n');
+            const headers = lines[0].split(',');
+            const data = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim() === '') continue;
+                const values = lines[i].split(',');
+                const unit = {
+                    unitno: values[0],
+                    type: values[1],
+                    above: values[2] ? values[2].split(';') : [],
+                    below: values[3] ? values[3].split(';') : []
+                };
+                data.push(unit);
+            }
+
+            return data;
+        }
+
+        generateBtn.addEventListener('click', () => {
+            createHarrisMatrix(parsedData);
+        });
+
+        function createHarrisMatrix(data) {
+            // Clear previous visualization
+            matrixContainer.innerHTML = '';
+
+            // Prepare data for D3 force layout
+            const nodes = data.map(d => ({...d, id: d.unitno}));
+            const links = [];
+
+            // Create links based on stratigraphic relationships
+            nodes.forEach(node => {
+                node.above.forEach(aboveUnit => {
+                    const targetNode = nodes.find(n => n.unitno === aboveUnit);
+                    if (targetNode) {
+                        links.push({
+                            source: targetNode.id,
+                            target: node.id
+                        });
+                    }
+                });
+            });
+
+            // SVG setup
+            const svg = d3.select('#matrix-container')
+                .append('svg')
+                .attr('width', '100%')
+                .attr('height', '100%')
+                .call(d3.zoom().on('zoom', (event) => {
+                    svg.attr('transform', event.transform);
+                }))
+                .append('g');
+
+            // Define node shapes based on type
+            const nodeShapes = {
+                'deposit': d3.symbol().type(d3.symbolCircle),
+                'structure': d3.symbol().type(d3.symbolSquare),
+                'cut': d3.symbol().type(d3.symbolTriangle)
+            };
+
+            // Force simulation
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(
+                    matrixContainer.clientWidth / 2, 
+                    matrixContainer.clientHeight / 2
+                ))
+                .force('y', d3.forceY(d => 
+                    // Vertical positioning based on stratigraphic position
+                    nodes.filter(n => n.below.includes(d.unitno)).length * 100
+                ));
+
+            // Create links
+            const link = svg.append('g')
+                .selectAll('line')
+                .data(links)
+                .enter().append('line')
+                .attr('class', 'link');
+
+            // Create nodes
+            const node = svg.append('g')
+                .selectAll('.node')
+                .data(nodes)
+                .enter().append('g')
+                .attr('class', 'node')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            // Add node shapes
+            node.append('path')
+                .attr('d', d => nodeShapes[d.type]())
+                .attr('fill', d => {
+                    const colorMap = {
+                        'deposit': '#4CAF50',
+                        'structure': '#2196F3',
+                        'cut': '#FF5722'
+                    };
+                    return colorMap[d.type] || '#9C27B0';
+                });
+
+            // Add unit numbers
+            node.append('text')
+                .text(d => d.unitno)
+                .attr('x', 10)
+                .attr('y', 5)
+                .attr('font-size', '12px');
+
+            // Update positions on each tick
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node
+                    .attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            // Drag functions
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+    </script>
+</body>
+</html>

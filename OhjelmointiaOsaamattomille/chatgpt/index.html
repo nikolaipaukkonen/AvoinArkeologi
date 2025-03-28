@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harris Matrix Automat</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    #container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    #upload-area {
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #harris-matrix {
+      border: 1px solid #ccc;
+      background-color: white;
+      width: 80%;
+      height: 80vh;
+      overflow: auto;
+    }
+
+    .node {
+      text-align: center;
+      padding: 10px;
+      font-size: 14px;
+      color: white;
+      border-radius: 10px;
+    }
+
+    .deposit {
+      background-color: #70ad47;
+      width: 100px;
+      height: 60px;
+      cursor: move;
+    }
+
+    .structure {
+      background-color: #5bc0de;
+      width: 120px;
+      height: 60px;
+      cursor: move;
+    }
+
+    .cut {
+      background-color: #d9534f;
+      width: 60px;
+      height: 60px;
+      cursor: move;
+    }
+
+    .link {
+      stroke: black;
+      stroke-width: 2;
+    }
+
+    .drag-line {
+      stroke: #FF6347;
+      stroke-width: 1;
+      stroke-dasharray: 4;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="container">
+    <div id="upload-area">
+      <input type="file" id="file-upload" accept=".csv" />
+      <button id="generate-button" onclick="generateMatrix()">Generate</button>
+    </div>
+    <div id="harris-matrix"></div>
+  </div>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script>
+    let data = [];
+
+    // CSV file parsing function
+    function parseCSV(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const contents = e.target.result;
+        const rows = contents.split('\n').map(row => row.trim()).filter(row => row);
+        const headers = rows[0].split(',').map(header => header.trim());
+        const parsedData = rows.slice(1).map(row => {
+          const values = row.split(',').map(value => value.trim());
+          let entry = {};
+          headers.forEach((header, index) => {
+            entry[header] = values[index] || null;
+          });
+          return entry;
+        });
+        data = parsedData;
+        alert("CSV file loaded successfully!");
+      };
+      reader.readAsText(file);
+    }
+
+    // Function to generate the Harris matrix
+    function generateMatrix() {
+      const margin = { top: 40, right: 40, bottom: 40, left: 40 };
+      const width = document.getElementById('harris-matrix').clientWidth - margin.left - margin.right;
+      const height = document.getElementById('harris-matrix').clientHeight - margin.top - margin.bottom;
+
+      // Clear previous SVG content
+      d3.select('#harris-matrix').selectAll('*').remove();
+
+      // SVG container
+      const svg = d3.select('#harris-matrix').append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const nodes = [];
+      const links = [];
+
+      // Parse data into nodes and links
+      data.forEach(unit => {
+        nodes.push({
+          id: unit.unitno,
+          type: unit.type,
+          above: unit.above ? unit.above.split(';') : [],
+          below: unit.below ? unit.below.split(';') : [],
+        });
+
+        if (unit.above) {
+          unit.above.split(';').forEach(aboveUnit => {
+            links.push({ source: aboveUnit, target: unit.unitno });
+          });
+        }
+        if (unit.below) {
+          unit.below.split(';').forEach(belowUnit => {
+            links.push({ source: unit.unitno, target: belowUnit });
+          });
+        }
+      });
+
+      // Create a force simulation to position the nodes
+      const simulation = d3.forceSimulation(nodes)
+        .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+        .force('charge', d3.forceManyBody().strength(-300))
+        .force('center', d3.forceCenter(width / 2, height / 2));
+
+      // Create links
+      const link = svg.selectAll('.link')
+        .data(links)
+        .enter().append('line')
+        .attr('class', 'link')
+        .style('stroke', '#999')
+        .style('stroke-width', '2px');
+
+      // Create nodes
+      const node = svg.selectAll('.node')
+        .data(nodes)
+        .enter().append('g')
+        .attr('class', 'node')
+        .call(d3.drag()
+          .on('start', dragStart)
+          .on('drag', dragging)
+          .on('end', dragEnd));
+
+      node.each(function(d) {
+        const nodeElement = d3.select(this);
+        let nodeShape;
+
+        // Assign different shapes based on type
+        if (d.type === 'deposit') {
+          nodeShape = nodeElement.append('ellipse')
+            .attr('rx', 50).attr('ry', 30)
+            .attr('class', 'deposit');
+        } else if (d.type === 'structure') {
+          nodeShape = nodeElement.append('rect')
+            .attr('width', 120).attr('height', 60)
+            .attr('x', -60).attr('y', -30)
+            .attr('class', 'structure');
+        } else {
+          nodeShape = nodeElement.append('polygon')
+            .attr('points', '-30,-30 30,-30 0,30')
+            .attr('class', 'cut');
+        }
+
+        nodeShape.style('fill', getNodeColor(d.type));
+
+        // Label the node
+        nodeElement.append('text')
+          .attr('dy', 40)
+          .attr('text-anchor', 'middle')
+          .text(d.id);
+      });
+
+      // Simulation tick function
+      simulation.on('tick', function() {
+        link
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
+
+        node
+          .attr('transform', d => `translate(${d.x},${d.y})`);
+      });
+    }
+
+    // Dragging functions
+    function dragStart(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragging(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragEnd(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // Helper function to get node color based on type
+    function getNodeColor(type) {
+      if (type === 'deposit') return '#70ad47';
+      if (type === 'structure') return '#5bc0de';
+      return '#d9534f'; // for cuts
+    }
+
+    // Handle file upload
+    document.getElementById('file-upload').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        parseCSV(file);
+      }
+    });
+  </script>
+</body>
+</html>

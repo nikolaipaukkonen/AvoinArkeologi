@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Harris Matrix Automat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #333;
+        }
+        input[type="file"] {
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #matrix {
+            width: 100%;
+            height: 80vh;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Harris Matrix Automat</h1>
+    <input type="file" id="csvInput" />
+    <button onclick="generateMatrix()">Generate</button>
+    <div id="matrix"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        function generateMatrix() {
+            const fileInput = document.getElementById('csvInput');
+            if (!fileInput.files.length) {
+                alert('Please upload a CSV file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const data = event.target.result;
+                const rows = d3.csvParse(data); // Use d3.csvParse for robust CSV parsing
+                const nodes = [];
+                const links = [];
+
+                rows.forEach(row => {
+                    const { unitno, type, above, below } = row;
+                    nodes.push({ id: unitno, type });
+
+                    if (above) {
+                        above.split(';').forEach(aboveUnit => {
+                            links.push({ source: aboveUnit.trim(), target: unitno.trim() });
+                        });
+                    }
+                    if (below) {
+                        below.split(';').forEach(belowUnit => {
+                            links.push({ source: unitno.trim(), target: belowUnit.trim() });
+                        });
+                    }
+                });
+
+                visualizeMatrix(nodes, links);
+            };
+            reader.readAsText(fileInput.files[0]);
+        }
+
+        function visualizeMatrix(nodes, links) {
+            d3.select('#matrix svg').remove(); // Clear previous SVG if it exists
+
+            const svg = d3.select('#matrix').append('svg')
+                .attr('width', '100%')
+                .attr('height', '100%');
+
+            const width = document.getElementById('matrix').clientWidth;
+            const height = document.getElementById('matrix').clientHeight;
+
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-300))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .on('tick', ticked);
+
+            const link = svg.selectAll('line')
+                .data(links)
+                .enter().append('line')
+                .attr('stroke', '#999')
+                .attr('stroke-width', 2);
+
+            const node = svg.selectAll('g')
+                .data(nodes)
+                .enter().append('g')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            node.append('path')
+                .attr('d', d => {
+                    if (d.type === 'deposit') return d3.symbol().type(d3.symbolCircle)();
+                    if (d.type === 'structure') return d3.symbol().type(d3.symbolSquare)();
+                    return d3.symbol().type(d3.symbolTriangle)();
+                })
+                .attr('fill', d => {
+                    if (d.type === 'deposit') return '#ffd700';
+                    if (d.type === 'structure') return '#90ee90';
+                    return '#ff6b6b';
+                });
+
+            node.append('text')
+                .text(d => d.id)
+                .attr('x', 12)
+                .attr('y', 5);
+
+            function ticked() {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node.attr('transform', d => `translate(${d.x},${d.y})`);
+            }
+
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+    </script>
+</body>
+</html>

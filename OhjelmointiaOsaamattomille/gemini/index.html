@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Harris Matrix Automat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        #input-container {
+            margin: 20px;
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #graph-container {
+            flex-grow: 1;
+            width: 95%;
+            overflow: auto;
+            border: 1px solid #ccc;
+            margin: 10px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #graph {
+            position: relative;
+            min-width: 800px;
+            min-height: 600px;
+        }
+
+        .node {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+            padding: 10px;
+            cursor: grab;
+            background-color: #eee;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            user-select: none; /* Prevent text selection */
+        }
+
+        .node:active {
+            cursor: grabbing;
+        }
+
+        .oval {
+            border-radius: 50%;
+            width: 80px;
+            height: 60px;
+        }
+
+        .rectangle {
+            border-radius: 0;
+            width: 100px;
+            height: 60px;
+        }
+
+        .triangle {
+          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+          width: 0;
+          height: 0;
+          border-left: 30px solid transparent;
+          border-right: 30px solid transparent;
+          border-bottom: 60px solid #eee;
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 60px;
+        }
+
+        .triangle span {
+            position: relative;
+            top: 20px;
+        }
+
+        .line {
+            position: absolute;
+            border-bottom: 2px solid #000;
+            transform-origin: top left;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #3e8e41;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #error-message {
+            color: red;
+            margin-top: 10px;
+            font-size: 0.9em;
+            display: none;
+            padding: 10px;
+            background-color: #ffe0e0;
+            border: 1px solid #ffb3b3;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="input-container">
+        <input type="file" id="file-input" accept=".csv">
+        <button id="generate-button" disabled>Generate</button>
+        <div id="error-message"></div>
+    </div>
+    <div id="graph-container">
+        <div id="graph"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('file-input');
+            const generateButton = document.getElementById('generate-button');
+            const graph = document.getElementById('graph');
+            const errorMessage = document.getElementById('error-message');
+
+            let nodes = {};
+            let edges = [];
+            let isDragging = false;
+            let draggedNode = null;
+            let offset = { x: 0, y: 0 };
+
+            fileInput.addEventListener('change', handleFileSelect, false);
+            generateButton.addEventListener('click', generateGraph);
+
+            function handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (!file) {
+                    generateButton.disabled = true;
+                    return;
+                }
+                if (!file.name.endsWith('.csv')) {
+                    displayErrorMessage('Please upload a .csv file.');
+                    generateButton.disabled = true;
+                    return;
+                }
+                errorMessage.style.display = 'none';
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    const csv = event.target.result;
+                    try {
+                        parseCSV(csv);
+                        generateButton.disabled = false;
+                    } catch (error) {
+                        displayErrorMessage('Error parsing CSV: ' + error.message);
+                        generateButton.disabled = true;
+                    }
+                };
+
+                reader.onerror = () => {
+                    displayErrorMessage('Error reading file.');
+                    generateButton.disabled = true;
+                };
+
+                reader.readAsText(file);
+            }
+
+            function displayErrorMessage(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+
+            function parseCSV(csv) {
+                const lines = csv.trim().split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                const unitnoIndex = headers.indexOf('unitno');
+                const typeIndex = headers.indexOf('type');
+                const aboveIndex = headers.indexOf('above');
+                const belowIndex = headers.indexOf('below');
+
+                if (unitnoIndex === -1 || typeIndex === -1 || aboveIndex === -1 || belowIndex === -1) {
+                    throw new Error('Missing required columns: unitno, type, above, below');
+                }
+
+                nodes = {};
+                edges = [];
+
+                for (let i = 1; i < lines.length; i++) {
+                    const data = lines[i].split(',').map(d => d.trim());
+                    if (data.length < 4) {
+                        console.warn(`Skipping line ${i + 1}: Not enough columns.`);
+                        continue;
+                    }
+                    const unitno = data[unitnoIndex];
+                    const type = data[typeIndex];
+                    const above = data[aboveIndex];
+                    const below = data[belowIndex];
+
+                    if (!unitno) {
+                        throw new Error(`Unit number is required in line ${i + 1}`);
+                    }
+                    if (!type) {
+                        throw new Error(`Type is required in line ${i + 1}`);
+                    }
+
+                    if (nodes[unitno]) {
+                         throw new Error(`Duplicate unit number "${unitno}" in line ${i+1}`);
+                    }
+
+                    nodes[unitno] = {
+                        unitno: unitno,
+                        type: type,
+                        above: above.split(';').filter(item => item),
+                        below: below.split(';').filter(item => item),
+                        x: 0,
+                        y: 0
+                    };
+
+                    nodes[unitno].above.forEach(aboveUnit => {
+                        if (aboveUnit) {
+                            edges.push({ from: unitno, to: aboveUnit });
+                        }
+                    });
+
+                    nodes[unitno].below.forEach(belowUnit => {
+                        if (belowUnit) {
+                            edges.push({ from: belowUnit, to: unitno });
+                        }
+                    });
+                }
+            }
+
+            function generateGraph() {
+                graph.innerHTML = '';
+                const nodeElements = {};
+                let maxX = 0;
+                let maxY = 0;
+
+                // Create node elements
+                for (const unitno in nodes) {
+                    const nodeData = nodes[unitno];
+                    const nodeElement = document.createElement('div');
+                    nodeElement.classList.add('node');
+                    nodeElement.textContent = unitno;
+                    nodeElement.dataset.unitno = unitno;
+
+                    if (nodeData.type === 'deposit') {
+                        nodeElement.classList.add('oval');
+                    } else if (nodeData.type === 'structure') {
+                        nodeElement.classList.add('rectangle');
+                    } else if (nodeData.type === 'cut') {
+                        nodeElement.classList.add('triangle');
+                        nodeElement.innerHTML = `<span>${unitno}</span>`;
+                    }
+
+                    graph.appendChild(nodeElement);
+                    nodeElements[unitno] = nodeElement;
+
+                    nodeElement.addEventListener('mousedown', (event) => {
+                        startDrag(event, nodeElement);
+                    });
+                }
+
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('mouseup', endDrag);
+
+                // Layout nodes (more sophisticated layering)
+                const layers = {};
+                const placed = {};
+                const maxLayer = { level: 0 };
+
+                function findMaxLayer(unit) {
+                  let max = 0;
+                  for (const parent of nodes[unit].above) {
+                    if (nodes[parent]) {
+                      const parentLayer = placed[parent] ? placed[parent].level : findMaxLayer(parent);
+                      max = Math.max(max, parentLayer + 1);
+                    }
+                  }
+                  return max;
+                }
+
+                function placeNode(unitno, level) {
+                    if (placed[unitno]) return placed[unitno].level;
+
+                    let maxParentLayer = findMaxLayer(unitno);
+                    level = Math.max(level, maxParentLayer);
+
+                    layers[level] = layers[level] || [];
+                    if (!layers[level].includes(unitno)) {
+                        layers[level].push(unitno);
+                    }
+                    placed[unitno] = { level: level };
+                    maxLayer.level = Math.max(maxLayer.level, level);
+
+                    nodes[unitno].below.forEach(belowUnit => {
+                      if(nodes[belowUnit]) {
+                        placeNode(belowUnit, level + 1);
+                      }
+                    });
+                    return level;
+                }
+
+                // Initial placement
+                for (const unitno in nodes) {
+                    if (!placed[unitno]) {
+                        placeNode(unitno, 0);
+                    }
+                }
+                const layerSpacing = 100;
+                const xSpacing = 150;
+
+                for (let level = 0; level <= maxLayer.level; level++) {
+                    const layerNodes = layers[level] || [];
+                    const layerWidth = layerNodes.reduce((acc, unitno) => {
+                        const nodeElement = nodeElements[unitno];
+                        return acc + (nodeElement ? nodeElement.offsetWidth : 100) + xSpacing;
+                    }, 0);
+                    let startX = Math.max(50, (graph.clientWidth - layerWidth + xSpacing) / 2);
+
+                    layerNodes.forEach(unitno => {
+                        const nodeElement = nodeElements[unitno];
+                        if (nodeElement) {
+                            nodes[unitno].x = startX;
+                            nodes[unitno].y = level * layerSpacing + 50;
+                            nodeElement.style.left = nodes[unitno].x + 'px';
+                            nodeElement.style.top = nodes[unitno].y + 'px';
+                            startX += nodeElement.offsetWidth + xSpacing;
+                            maxX = Math.max(maxX, nodes[unitno].x + nodeElement.offsetWidth);
+                            maxY = Math.max(maxY, nodes[unitno].y + nodeElement.offsetHeight);
+                        }
+                    });
+                }
+                // Set graph size
+                graph.style.width = Math.max(800, maxX + 50) + 'px';
+                graph.style.height = Math.max(600, maxY + 50) + 'px';
+
+                // Draw edges
+                edges.forEach(edge => {
+                    const fromNode = nodeElements[edge.from];
+                    const toNode = nodeElements[edge.to];
+
+                    if (fromNode && toNode) {
+                        const fromRect = fromNode.getBoundingClientRect();
+                        const toRect = toNode.getBoundingClientRect();
+
+                        const fromX = fromRect.left + fromRect.width / 2 - graph.getBoundingClientRect().left;
+                        const fromY = fromRect.bottom - graph.getBoundingClientRect().top;
+                        const toX = toRect.left + toRect.width / 2 - graph.getBoundingClientRect().left;
+                        const toY = toRect.top - graph.getBoundingClientRect().top;
+
+                        const line = document.createElement('div');
+                        line.classList.add('line');
+                        line.style.left = fromX + 'px';
+                        line.style.top = fromY + 'px';
+                        const distance = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+                        line.style.width = distance + 'px';
+                        const angle = Math.atan2(toY - fromY, toX - fromX);
+                        line.style.transform = `rotate(${angle}rad)`;
+                        graph.appendChild(line);
+                    }
+                });
+            }
+
+            function startDrag(event, nodeElement) {
+                isDragging = true;
+                draggedNode = nodeElement;
+                const rect = nodeElement.getBoundingClientRect();
+                offset.x = event.clientX - rect.left;
+                offset.y = event.clientY - rect.top;
+                nodeElement.style.zIndex = '10';
+            }
+
+            function drag(event) {
+                if (isDragging && draggedNode) {
+                    const graphRect = graph.getBoundingClientRect();
+                    let x = event.clientX - graphRect.left - offset.x;
+                    let y = event.clientY - graphRect.top - offset.y;
+
+                    // Constrain dragging within the graph bounds
+                    x = Math.max(0, Math.min(x, graphRect.width - draggedNode.offsetWidth));
+                    y = Math.max(0, Math.min(y, graphRect.height - draggedNode.offsetHeight));
+
+                    draggedNode.style.left = x + 'px';
+                    draggedNode.style.top = y + 'px';
+                    nodes[draggedNode.dataset.unitno].x = x;
+                    nodes[draggedNode.dataset.unitno].y = y;
+                    redrawEdges(); // Update edge positions during drag
+                }
+            }
+
+            function endDrag(event) {
+                if (isDragging) {
+                    isDragging = false;
+                    if (draggedNode) {
+                        draggedNode.style.zIndex = '1';
+                        draggedNode = null;
+                    }
+                }
+            }
+
+            function redrawEdges() {
+                const lines = graph.querySelectorAll('.line');
+                lines.forEach(line => line.remove());
+
+                for (const edge of edges) {
+                    const fromNodeElement = document.querySelector(`[data-unitno="${edge.from}"]`);
+                    const toNodeElement = document.querySelector(`[data-unitno="${edge.to}"]`);
+
+                    if (fromNodeElement && toNodeElement) {
+                        const fromRect = fromNodeElement.getBoundingClientRect();
+                        const toRect = toNodeElement.getBoundingClientRect();
+
+                        const fromX = fromRect.left + fromRect.width / 2 - graph.getBoundingClientRect().left;
+                        const fromY = fromRect.bottom - graph.getBoundingClientRect().top;
+                        const toX = toRect.left + toRect.width / 2 - graph.getBoundingClientRect().left;
+                        const toY = toRect.top - graph.getBoundingClientRect().top;
+
+                        const line = document.createElement('div');
+                        line.classList.add('line');
+                        line.style.left = fromX + 'px';
+                        line.style.top = fromY + 'px';
+                        const distance = Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+                        line.style.width = distance + 'px';
+                        const angle = Math.atan2(toY - fromY, toX - fromX);
+                        line.style.transform = `rotate(${angle}rad)`;
+                        graph.appendChild(line);
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harris Matrix Automat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        #controls {
+            margin-bottom: 20px;
+        }
+        #graph {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+        }
+        .node rect {
+            stroke: #333;
+            stroke-width: 1.5px;
+        }
+        .node text {
+            font: 12px sans-serif;
+            text-anchor: middle;
+        }
+        .link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <input type="file" id="fileInput" accept=".csv">
+        <button id="generateButton">Generate</button>
+    </div>
+    <div id="graph"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        document.getElementById('generateButton').addEventListener('click', generateHarrisMatrix);
+
+        function generateHarrisMatrix() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert('Please upload a CSV file first.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                const data = d3.csvParse(csvData);
+                createHarrisMatrix(data);
+            };
+
+            reader.readAsText(file);
+        }
+
+        function createHarrisMatrix(data) {
+            d3.select('#graph').selectAll('*').remove(); // Clear previous graph
+
+            const width = 800;
+            const height = 600;
+
+            const svg = d3.select('#graph')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height);
+
+            const nodes = data.map(d => ({
+                id: d.unitno,
+                type: d.type,
+                above: d.above ? d.above.split(';') : [],
+                below: d.below ? d.below.split(';') : []
+            }));
+
+            const links = [];
+            nodes.forEach(node => {
+                node.above.forEach(aboveId => {
+                    if (aboveId) {
+                        links.push({ source: aboveId, target: node.id });
+                    }
+                });
+            });
+
+            const simulation = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links).id(d => d.id).distance(100))
+                .force('charge', d3.forceManyBody().strength(-400))
+                .force('center', d3.forceCenter(width / 2, height / 2));
+
+            const link = svg.append('g')
+                .attr('class', 'links')
+                .selectAll('line')
+                .data(links)
+                .enter().append('line')
+                .attr('class', 'link');
+
+            const node = svg.append('g')
+                .attr('class', 'nodes')
+                .selectAll('g')
+                .data(nodes)
+                .enter().append('g')
+                .attr('class', 'node')
+                .call(d3.drag()
+                    .on('start', dragstarted)
+                    .on('drag', dragged)
+                    .on('end', dragended));
+
+            node.append('rect')
+                .attr('width', d => d.type === 'structure' ? 50 : 30)
+                .attr('height', d => d.type === 'structure' ? 30 : 40)
+                .attr('rx', d => d.type === 'deposit' ? 20 : 0)
+                .attr('ry', d => d.type === 'deposit' ? 20 : 0)
+                .attr('transform', d => d.type === 'cut' ? 'rotate(45)' : '')
+                .attr('x', -15)
+                .attr('y', -15);
+
+            node.append('text')
+                .attr('dy', 4)
+                .attr('x', 0)
+                .attr('y', 0)
+                .text(d => d.id);
+
+            simulation.on('tick', () => {
+                link
+                    .attr('x1', d => d.source.x)
+                    .attr('y1', d => d.source.y)
+                    .attr('x2', d => d.target.x)
+                    .attr('y2', d => d.target.y);
+
+                node
+                    .attr('transform', d => `translate(${d.x},${d.y})`);
+            });
+
+            function dragstarted(event, d) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+
+            function dragged(event, d) {
+                d.fx = event.x;
+                d.fy = event.y;
+            }
+
+            function dragended(event, d) {
+                if (!event.active) simulation.alphaTarget(0);
+                d.fx = null;
+                d.fy = null;
+            }
+        }
+    </script>
+</body>
+</html>

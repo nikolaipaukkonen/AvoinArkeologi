@@ -1,0 +1,9 @@
+unitno,type,above,below
+1,deposit,2,
+2,deposit,3;4;7,1
+3,structure,2;6,2
+4,deposit,5,2
+5,deposit,8,4
+6,deposit,8,3
+7,deposit,8,2
+8,deposit,,5;6;7

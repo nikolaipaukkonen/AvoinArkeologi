@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harris Matrix Automat</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .upload-section {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        #matrix-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .node {
+            cursor: move;
+        }
+
+        .node text {
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .link {
+            stroke: #999;
+            stroke-width: 1.5;
+            fill: none;
+        }
+
+        .deposit {
+            fill: #ffd700;
+            stroke: #b8860b;
+        }
+
+        .structure {
+            fill: #90ee90;
+            stroke: #228b22;
+        }
+
+        .cut {
+            fill: #ff6b6b;
+            stroke: #8b0000;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            #matrix-container {
+                height: 400px;
+            }
+
+            .button {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Harris Matrix Automat</h1>
+        <div class="upload-section">
+            <input type="file" id="csvFile" accept=".csv" style="display: none;">
+            <button class="button" onclick="document.getElementById('csvFile').click()">Upload CSV</button>
+            <button class="button" id="generateBtn" disabled onclick="generateMatrix()">Generate Matrix</button>
+        </div>
+        <div id="matrix-container"></div>
+    </div>
+
+    <script>
+        let csvData = null;
+        let simulation = null;
+        let svg = null;
+
+        // Initialize the SVG container
+        function initializeSVG() {
+            const container = document.getElementById('matrix-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            // Clear previous SVG if it exists
+            d3.select("#matrix-container svg").remove();
+
+            // Create new SVG
+            svg = d3.select("#matrix-container")
+                .append("svg")
+                .attr("width", "100%")
+                .attr("height", "100%")
+                .attr("viewBox", [0, 0, width, height]);
+        }
+
+        // Handle CSV file upload
+        document.getElementById('csvFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    csvData = d3.csvParse(event.target.result);
+                    document.getElementById('generateBtn').disabled = false;
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Generate the Harris Matrix
+        function generateMatrix() {
+            if (!csvData) return;
+
+            initializeSVG();
+
+            // Create nodes and links from CSV data
+            const nodes = csvData.map(d => ({
+                id: d.unitno,
+                type: d.type,
+                above: d.above ? d.above.split(';') : [],
+                below: d.below ? d.below.split(';') : []
+            }));
+
+            const links = [];
+            nodes.forEach(node => {
+                node.above.forEach(aboveId => {
+                    links.push({
+                        source: aboveId,
+                        target: node.id
+                    });
+                });
+                node.below.forEach(belowId => {
+                    links.push({
+                        source: node.id,
+                        target: belowId
+                    });
+                });
+            });
+
+            const width = document.getElementById('matrix-container').clientWidth;
+            const height = document.getElementById('matrix-container').clientHeight;
+
+            // Create simulation
+            simulation = d3.forceSimulation(nodes)
+                .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+                .force("charge", d3.forceManyBody().strength(-300))
+                .force("center", d3.forceCenter(width / 2, height / 2));
+
+            // Create links
+            const link = svg.append("g")
+                .selectAll("line")
+                .data(links)
+                .join("line")
+                .attr("class", "link");
+
+            // Create nodes
+            const node = svg.append("g")
+                .selectAll("g")
+                .data(nodes)
+                .join("g")
+                .attr("class", "node")
+                .call(d3.drag()
+                    .on("start", dragstarted)
+                    .on("drag", dragged)
+                    .on("end", dragended));
+
+            node.each(function(d) {
+                const g = d3.select(this);
+                switch (d.type) {
+                    case 'deposit':
+                        g.append("ellipse")
+                            .attr("rx", 30)
+                            .attr("ry", 20)
+                            .attr("class", "deposit");
+                        break;
+                    case 'structure':
+                        g.append("rect")
+                            .attr("width", 60)
+                            .attr("height", 40)
+                            .attr("x", -30)
+                            .attr("y", -20)
+                            .attr("class", "structure");
+                        break;
+                    case 'cut':
+                        g.append("path")
+                            .attr("d", "M-30,20 L0,-20 L30,20 Z")
+                            .attr("class", "cut");
+                        break;
+                }
+                g.append("text")
+                    .attr("dy", "0.35em")
+                    .attr("text-anchor", "middle")
+                    .text(d.id);
+            });
+
+            simulation.on("tick", () => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+
+                node.attr("transform", d => `translate(${d.x},${d.y})`);
+            });
+        }
+
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            event.subject.fx = null;
+            event.subject.fy = null;
+        }
+
+        window.addEventListener('resize', () => {
+            if (csvData) generateMatrix();
+        });
+    </script>
+</body>
+</html>
+

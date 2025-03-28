@@ -12,6 +12,10 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ## Ohjeita, oppaita ja vinkkejä
 
+### Yleiset kielimallit (LLM)
+
+- [Ohjelmointia osaamattomille](.OhjelmointiaOsaamattomille/ohjelmointiaosaamattomille.md)
+
 ### Blender
 
 - [Realistisen metallipinnan simulointi](./Blender_materiaalimuokkaus/Blender_materiaalimuokkaus.md)

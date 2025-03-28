@@ -28,7 +28,7 @@ Niille annettiin seuraava CSV-tiedosto, joka kuvaa yksinkertaisia stratigrafisia
 | 7 | deposit | 8 | 2 |
 | 8 | deposit | | 5;6;7 |
 
-Minkä jälkeen kielimallille annettiin alla oleva ohjeistussyöte:
+Minkä jälkeen kielimalleille annettiin alla oleva ohjeistussyöte:
 
 ```
 Create an app called Harris Matrix Automat that allows archaeologists to generate visual Harris matrices from structured stratigraphical data. The user uploads a CSV file, and the app visualizes the stratigraphical relationships between units in a top-down hierarchical graph, with the newest units on top and the oldest at the bottom.
@@ -134,3 +134,4 @@ Kaiken kaikkiaan mallien suoritus on melko hyvä: lopputulokset syntyivät yhdel
 Yhtäkään näistä ei ehkä sellaisenaan kannata käyttää, mutta niiden muokkaaminen ja jatkokehittäminen olisi tarvittaessa helppoa joko koodaamalla itse tai käskemällä kielimalleja tekemään parannuksia.
 
 Eri kielimallien tuottama koodi, syöte sekä esimerkkidata nähtävissä [Github-repositoriossani](https://github.com/nikolaipaukkonen/AvoinArkeologi/tree/main/OhjelmointiaOsaamattomille).
+Inspiraation testiin sain Hacker Newsissä olleesta [vngistin vastaavan tyyppisestä testistä](https://github.com/vnglst/when-ai-fails/blob/main/shepards-dog/README.md). 

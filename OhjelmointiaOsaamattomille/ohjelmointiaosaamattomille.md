@@ -101,3 +101,5 @@ Tulokset:
 Kaiken kaikkiaan mallien suoritus on melko hyvä: lopputulokset syntyivät yhdellä tai kahdella ohjeistuksella muutamassa minuutissa. Kaikki ohjelmat toimivat myös isommilla aineistoilla (testasin jokaista esimerkkidatalla jossa oli 28 yksikköä). 
 
 Yhtäkään näistä ei ehkä sellaisenaan kannata käyttää, mutta niiden muokkaaminen ja jatkokehittäminen olisi tarvittaessa helppoa joko koodaamalla itse tai käskemällä kielimalleja tekemään parannuksia.
+
+Eri kielimallien tuottama koodi, syöte sekä esimerkkidata nähtävissä [Github-repositoriossani](https://github.com/nikolaipaukkonen/AvoinArkeologi/tree/main/OhjelmointiaOsaamattomille).

@@ -14,7 +14,7 @@ Parannusideoita ja korjauksia otetaan vastaan [GitHubin](https://github.com/niko
 
 ### Yleiset kielimallit (LLM)
 
-- [Ohjelmointia osaamattomille](.OhjelmointiaOsaamattomille/ohjelmointiaosaamattomille.md)
+- [Ohjelmointia osaamattomille](./OhjelmointiaOsaamattomille/ohjelmointiaosaamattomille.md)
 
 ### Blender
 

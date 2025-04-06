@@ -134,4 +134,4 @@ Kaiken kaikkiaan mallien suoritus on melko hyvä: lopputulokset syntyivät yhdel
 Yhtäkään näistä ei ehkä sellaisenaan kannata käyttää, mutta niiden muokkaaminen ja jatkokehittäminen olisi tarvittaessa helppoa joko koodaamalla itse tai käskemällä kielimalleja tekemään parannuksia.
 
 Eri kielimallien tuottama koodi, syöte sekä esimerkkidata nähtävissä [Github-repositoriossani](https://github.com/nikolaipaukkonen/AvoinArkeologi/tree/main/OhjelmointiaOsaamattomille).
-Inspiraation testiin sain Hacker Newsissä olleesta [vngistin vastaavan tyyppisestä testistä](https://github.com/vnglst/when-ai-fails/blob/main/shepards-dog/README.md). 
+Inspiraation testiin sain Hacker Newsissä olleesta [vngistin vastaavan tyyppisestä testistä](https://github.com/vnglst/when-ai-fails/blob/main/shepards-dog/README.md). Katso myös [Vide coding](https://en.wikipedia.org/wiki/Vibe_coding).

@@ -49,7 +49,7 @@ unitno,type,above,below
 
 ## Technical constraints
 - Single-file app: All HTML, CSS, and JavaScript must be contained in a single index.html file. No external .css or .js files
-- The game should be build using HTML, CSS and JavaScript
+- The app should be build using HTML, CSS and JavaScript
 - Core Technologies: Use HTML, CSS, and JavaScript. If needed, you may use a lightweight external library like D3.js for graph visualization
 - You will generate your own assets using basic shapes. In the matrix, I want the deposits to be ovals, structures to be rectangles and cuts to be triangles
 - The app should be usable on both desktop and mobile devices

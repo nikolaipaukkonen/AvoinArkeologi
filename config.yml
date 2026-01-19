@@ -2,5 +2,4 @@ title: Avoin Arkeologi
 description: ATK:ta arkeologeille
 show_downloads: true
 google_analytics:
-remote_theme: sighingnow/jekyll-gitbook
-
+theme: jekyll-theme-minimal
